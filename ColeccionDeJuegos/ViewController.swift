@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var juegos : [Juego] = []
     @IBOutlet weak var tableView: UITableView!
@@ -28,13 +28,20 @@ class ViewController: UIViewController {
             
         }
     }
-    
-}
-
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return juegos.count
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let juego = juegos[indexPath.row]
+        performSegue(withIdentifier: "juegoSegue", sender: juego)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let siguienteVC = segue.destination as! JuegoViewController
+        siguienteVC.juego = sender as? Juego
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let juego = juegos[indexPath.row]
@@ -42,4 +49,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.imageView?.image = UIImage(data: (juego.imagen!) as Data)
         return cell
     }
+    
+    
 }
